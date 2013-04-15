@@ -6,13 +6,14 @@ class TuringMachine:
 		self.sm = StateMachine(self, states, trans)
 		self.tape = [Cell(input[i]) for i in range(len(input))]
 		self.head = 0
-
+		
 	def run(self):
+		self.printDebug()
+
 		while True:
 			self.sm.step(self.currCell().char)
 
-			print("We are in "+str(self.sm.curr)+ " with the tape:\n")
-			print(self.tape)
+			self.printConfig()
 
 			if self.sm.accepts():
 				print("We accepted!")
@@ -25,6 +26,18 @@ class TuringMachine:
 		if self.tape[self.head] is None:
 			self.tape[self.head] = Cell(None)
 		return self.tape[self.head]
+
+	def printConfig(self):
+		print("We are in "+str(self.sm.curr)+ " with the tape:")
+		print(self.tape)
+
+	def printDebug(self):
+		print("-------------DEBUG----------------------")
+		print(self.sm.states)
+		print(self.sm.trans)
+		print(self.tape)
+		print(self.head)
+		print("----------------------------------------")
 
 class Cell:
 	def __init__(self, char, mark=False):
@@ -66,6 +79,8 @@ class State:
 		s = self.label
 		if self.accepting():
 			s = "+"+s 
+		if self.rejecting():
+			s = "-"+s
 
 		return s
 
@@ -98,20 +113,20 @@ if __name__ == "__main__":
 	states = [
 			('Start', None),
 			('Accept', True),
-			# ('Reject', False)
+			('Reject', False)
 	]
 
 	transitions = {
-			(0, '0'): (1, '1', State.L),
-			(0, '1'): (1, '1', State.L),
+			(0, '0'): (2, 'e', State.L),
+			(0, '1'): (1, None, State.L),
 	}
 
 	states = [State(s[1], s[0]) for s in states]
 	trans = {}
 	for f, t in transitions.items():
-		(f, c) = f
-		(t, c, h) = t
-		trans[(states[f], c)] = Transition(states[t], c, h)
+		(f, pc) = f
+		(t, nc, h) = t
+		trans[(states[f], pc)] = Transition(states[t], nc, h)
 
 	machine = TuringMachine(input, states, trans)
 	machine.run()
