@@ -108,7 +108,7 @@ class Transition:
 		return str((self.to, self.char, self.head))
 
 if __name__ == "__main__":
-	input = sys.argv[1]
+	input = "$"+sys.argv[1]+"#"
 
 	states = [
 			('Start', None),
@@ -117,7 +117,7 @@ if __name__ == "__main__":
 	]
 
 	transitions = {
-			(0, '0'): (2, 'e', State.L),
+			(0, '0'): (2, 'X', State.L),
 			(0, '1'): (1, None, State.L),
 	}
 
