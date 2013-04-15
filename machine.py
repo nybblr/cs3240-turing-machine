@@ -8,7 +8,7 @@ class TuringMachine:
 		self.head = 0
 		
 	def run(self):
-		self.printDebug()
+		# self.printDebug()
 		self.printConfig()
 
 		while True:
@@ -115,6 +115,7 @@ class Transition:
 
 		# Move head
 		tm.head += self.head
+		tm.head = max(tm.head, 0)
 
 	def __repr__(self):
 		return str((self.to, self.char, self.head))
