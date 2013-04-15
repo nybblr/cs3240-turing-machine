@@ -41,8 +41,6 @@ class TuringMachine:
 		print("-------------DEBUG----------------")
 		print(self.sm.states)
 		print(self.sm.trans)
-		print(self.tape)
-		print(self.head)
 		print("----------------------------------")
 
 class Cell:
