@@ -17,10 +17,10 @@ class TuringMachine:
 			self.printConfig()
 
 			if self.sm.accepts():
-				print("We accepted!")
+				print("Accept: "+str(self.sm.curr))
 				break
 			if self.sm.rejects():
-				print("We rejected!")
+				print("Reject: "+str(self.sm.curr))
 				break
 
 	def currCell(self):
@@ -79,6 +79,7 @@ class StateMachine:
 class State:
 	L = -1
 	R = 1
+	S = 0
 	def __init__(self, action, label=None):
 		self.action = action
 		self.label = label
@@ -116,7 +117,7 @@ class Transition:
 		return str((self.to, self.char, self.head))
 
 if __name__ == "__main__":
-	L = State.L; R = State.R
+	L = State.L; R = State.R; S = State.S
 
 	input = "$"+sys.argv[1]+"#"
 
