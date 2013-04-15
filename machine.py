@@ -1,6 +1,11 @@
 import sys
 from utility import *
 
+OUTPUT = ""
+def printfl(string):
+	global OUTPUT
+	OUTPUT += string+"\n"
+
 class TuringMachine:
 	def __init__(self, input, states, trans, start=None):
 		self.sm = StateMachine(self, states, trans, start)
@@ -8,19 +13,21 @@ class TuringMachine:
 		self.head = 0
 		
 	def run(self):
-		# self.printDebug()
-		self.printConfig()
+		# self.printflDebug()
+		self.printflConfig()
 
 		while True:
 			self.sm.step(self.currCell().char)
 
-			self.printConfig()
+			self.printflConfig()
 
 			if self.sm.accepts():
-				print("Accept: "+str(self.sm.curr))
+				# printfl("Accept: "+str(self.sm.curr))
+				printfl("Accept.")
 				break
 			if self.sm.rejects():
-				print("Reject: "+str(self.sm.curr))
+				# printfl("Reject: "+str(self.sm.curr))
+				printfl("Reject.")
 				break
 
 	def currCell(self):
@@ -28,20 +35,20 @@ class TuringMachine:
 			self.tape[self.head] = Cell(None)
 		return self.tape[self.head]
 
-	def printConfig(self):
+	def printflConfig(self):
 		string = ""
 		for cell in self.tape:
 			string += str(cell)+' '
 		
 		string += "=> "+str(self.sm.curr)
-		print(string)
-		print('  '*self.head + '^')
+		printfl(string)
+		printfl('  '*self.head + '^')
 
-	def printDebug(self):
-		print("-------------DEBUG----------------")
-		print(self.sm.states)
-		print(self.sm.trans)
-		print("----------------------------------")
+	def printflDebug(self):
+		printfl("-------------DEBUG----------------")
+		printfl(self.sm.states)
+		printfl(self.sm.trans)
+		printfl("----------------------------------")
 
 class Cell:
 	def __init__(self, char, mark=False):
@@ -121,21 +128,22 @@ class Transition:
 		return str((self.to, self.char, self.head))
 
 if __name__ == "__main__":
+	# Easy head reference
 	L = State.L; R = State.R
 
-	input = "$"+sys.argv[1]+"#"
-
+	# Define states
 	states = [
-			('reject', False),
-			('1', None),
-			('2', None),
-			('3', None),
-			('4', None),
-			('5', None),
-			('6', None),
-			('accept', True),
+		('reject', False),
+		('1', None),
+		('2', None),
+		('3', None),
+		('4', None),
+		('5', None),
+		('6', None),
+		('accept', True),
 	]
 
+	# Define transitions
 	transitions = {
 		(1, '0'): (1,'0',L),	(1, '1'): (1,'1',L),	(1, '$'): (2,'$',R),	(1, 'X'): (1,'X',L),	(1, '#'): (1,'#',L),
 		(2, '0'): (3,'0',R),	(2, '1'): (4,'X',L),	(2, '$'): (0,'#',R),	(2, 'X'): (2,'X',R),	(2, '#'): (7,'#',R),
@@ -145,6 +153,7 @@ if __name__ == "__main__":
 		(6, '0'): (1,'X',L),	(6, '1'): (6,'1',R),	(6, '$'): (0,'#',R),	(6, 'X'): (6,'X',R),	(6, '#'): (0,'#',R),
 	}
 
+	# Build states and transitions
 	states = [State(s[1], s[0]) for s in states]
 	trans = {}
 	for f, t in transitions.items():
@@ -152,5 +161,20 @@ if __name__ == "__main__":
 		(t, nc, h) = t
 		trans[(states[f], pc)] = Transition(states[t], nc, h)
 
-	machine = TuringMachine(input, states, trans, start=states[1])
-	machine.run()
+	# Read in the bitstrings from input.txt
+	lines = [line.strip() for line in open('inputs.txt')]
+	count = lines.pop(0)
+	
+	for string in lines:
+		printfl('------------------------')
+		printfl(string)
+		printfl('------------------------')
+		input = string.replace(' ', '')
+		machine = TuringMachine('$'+input+'#', states, trans, start=states[1])
+		machine.run()
+		printfl('')
+
+	# print(OUTPUT)
+	f = open('outputs.txt', 'w')
+	f.write(OUTPUT)
+	f.close()
