@@ -38,12 +38,12 @@ class TuringMachine:
 		print('  '*self.head + '^')
 
 	def printDebug(self):
-		print("-------------DEBUG----------------------")
+		print("-------------DEBUG----------------")
 		print(self.sm.states)
 		print(self.sm.trans)
 		print(self.tape)
 		print(self.head)
-		print("----------------------------------------")
+		print("----------------------------------")
 
 class Cell:
 	def __init__(self, char, mark=False):
