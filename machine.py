@@ -9,6 +9,7 @@ class TuringMachine:
 		
 	def run(self):
 		self.printDebug()
+		self.printConfig()
 
 		while True:
 			self.sm.step(self.currCell().char)
@@ -28,8 +29,13 @@ class TuringMachine:
 		return self.tape[self.head]
 
 	def printConfig(self):
-		print("We are in "+str(self.sm.curr)+ " with the tape:")
-		print(self.tape)
+		string = ""
+		for cell in self.tape:
+			string += str(cell)+' '
+		
+		string += "=> "+str(self.sm.curr)
+		print(string)
+		print('  '*self.head + '^')
 
 	def printDebug(self):
 		print("-------------DEBUG----------------------")
@@ -45,6 +51,10 @@ class Cell:
 		self.mark = mark
 
 	def __repr__(self):
+		s = self.char
+		if s is None or s is '':
+			s = '~'
+
 		return self.char
 
 class StateMachine:
@@ -108,17 +118,21 @@ class Transition:
 		return str((self.to, self.char, self.head))
 
 if __name__ == "__main__":
+	L = State.L; R = State.R
+
 	input = "$"+sys.argv[1]+"#"
 
 	states = [
+			('Head', None),
 			('Start', None),
 			('Accept', True),
 			('Reject', False)
 	]
 
 	transitions = {
-			(0, '0'): (2, 'X', State.L),
-			(0, '1'): (1, None, State.L),
+			(0, '$'): (1, None, R),
+			(1, '0'): (3, 'X', L),
+			(1, '1'): (2, None, L),
 	}
 
 	states = [State(s[1], s[0]) for s in states]
