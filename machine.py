@@ -1,3 +1,4 @@
+import sys
 from utility import *
 
 class TuringMachine:
@@ -8,15 +9,17 @@ class TuringMachine:
 
 	def run(self):
 		while True:
-			self.sm.step(currCell().char)
+			self.sm.step(self.currCell().char)
 
-			print("We are in "+str(self.sm.curr)+ "with the tape:\n")
+			print("We are in "+str(self.sm.curr)+ " with the tape:\n")
 			print(self.tape)
 
 			if self.sm.accepts():
-				pass
+				print("We accepted!")
+				break
 			if self.sm.rejects():
-				pass
+				print("We rejected!")
+				break
 
 	def currCell(self):
 		if self.tape[self.head] is None:
@@ -29,7 +32,7 @@ class Cell:
 		self.mark = mark
 
 	def __repr__(self):
-		return char
+		return self.char
 
 class StateMachine:
 	def __init__(self, tm, states, transitions):
@@ -40,9 +43,9 @@ class StateMachine:
 
 	def step(self, char):
 		if (self.curr, char) in self.trans:
-			transition = self.transitions[(self.curr, char)]
+			transition = self.trans[(self.curr, char)]
 			self.curr = transition.to
-			transition.apply(tm)
+			transition.apply(self.tm)
 		else:
 			raise Exception("No such transition from {0} on {1} exists!".format(str(self.curr), char))
 
@@ -60,8 +63,8 @@ class State:
 		self.label = label
 
 	def __repr__(self):
-		s = label
-		if s.accepting():
+		s = self.label
+		if self.accepting():
 			s = "+"+s 
 
 		return s
@@ -81,20 +84,26 @@ class Transition:
 	def apply(self, tm):
 		# Overwrite current cell if given
 		if self.char:
-			tm.currCell.char = self.char
+			tm.currCell().char = self.char
 
 		# Move head
 		tm.head += self.head
 
+	def __repr__(self):
+		return str((self.to, self.char, self.head))
+
 if __name__ == "__main__":
+	input = sys.argv[1]
+
 	states = [
 			('Start', None),
 			('Accept', True),
-			('Reject', False)
+			# ('Reject', False)
 	]
 
 	transitions = {
-			(0, '0'): (1, 'm', State.L),
+			(0, '0'): (1, '1', State.L),
+			(0, '1'): (1, '1', State.L),
 	}
 
 	states = [State(s[1], s[0]) for s in states]
@@ -102,6 +111,7 @@ if __name__ == "__main__":
 	for f, t in transitions.items():
 		(f, c) = f
 		(t, c, h) = t
-		trans[(states[s], c)] = Transition(states[t], c, h)
+		trans[(states[f], c)] = Transition(states[t], c, h)
 
 	machine = TuringMachine(input, states, trans)
+	machine.run()
