@@ -115,9 +115,9 @@ $ X X X X X X 1 1 X # => 5
                   ^
 $ X X X X X X 1 1 X # => 5
                     ^
-$ X X X X X X 1 1 X # => -reject
+$ X X X X X X 1 1 X # => +accept
                       ^
-Reject.
+Accept.
 
 ------------------------
 0 1 1
@@ -140,9 +140,9 @@ $ X X 1 # => 6
       ^
 $ X X 1 # => 6
         ^
-$ X X 1 # => -reject
+$ X X 1 # => +accept
           ^
-Reject.
+Accept.
 
 ------------------------
 0 0 1 0 1
@@ -201,9 +201,9 @@ $ X X X X X # => 6
           ^
 $ X X X X X # => 6
             ^
-$ X X X X X # => -reject
+$ X X X X X # => +accept
               ^
-Reject.
+Accept.
 
 ------------------------
 0 0 1
@@ -238,9 +238,9 @@ $ X X X # => 2
       ^
 $ X X X # => 2
         ^
-$ X X X # => +accept
+$ X X X # => -reject
           ^
-Accept.
+Reject.
 
 ------------------------
 0 0 1 0 0 1
@@ -325,7 +325,7 @@ $ X X X X X X # => 2
             ^
 $ X X X X X X # => 2
               ^
-$ X X X X X X # => +accept
+$ X X X X X X # => -reject
                 ^
-Accept.
+Reject.
 

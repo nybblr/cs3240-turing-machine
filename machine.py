@@ -133,14 +133,14 @@ if __name__ == "__main__":
 
 	# Define states
 	states = [
-		('reject', False),
+		('accept', True),
 		('1', None),
 		('2', None),
 		('3', None),
 		('4', None),
 		('5', None),
 		('6', None),
-		('accept', True),
+		('reject', False),
 	]
 
 	# Define transitions
